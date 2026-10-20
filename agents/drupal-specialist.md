@@ -40,6 +40,32 @@ Before changing anything:
 - **Access:** every route needs a `_permission`, `_entity_access`, or custom
   access check. `_access: 'TRUE'` requires an explicit reason.
 
+## Config changes
+
+Editing exported YAML under `config/sync/` is not the same as changing the site.
+Config entities carry explicit `dependencies:` blocks and cross-reference each
+other; YAML that parses cleanly can still fail to import.
+
+- **Import what you edit.** After changing anything in `config/sync/`, run the
+  import (`fin drush cim -y`, or the project's wrapper) and report the result.
+  Search API, Views, and Field config validate cross-entity dependencies only
+  at import time — a parse check proves syntax, not validity. If a sandbox or
+  permission rule blocks the import, say plainly that the change is unverified
+  and give the exact command the user must run.
+- **Grep for references before removing anything.** Before dropping a bundle,
+  field, or list entry, search `config/sync/` for every reference to it —
+  including `dependencies:` blocks, cache tags, processor field lists, and
+  Views handlers. Removing the last provider of a property path breaks every
+  field, processor, and handler still pointing at it, and the error surfaces
+  at import or deploy, not in the diff.
+- **Removals are riskier than additions.** Adding to a list is usually safe;
+  removing from one is not, because other config may have grown to depend on
+  it. State what else referenced the thing you removed and what you did about
+  each reference.
+- **Report the diff.** After config work, show `git diff --stat config/sync/`
+  and confirm the change is what you intended — no unrelated re-exports, no
+  dropped keys.
+
 ## Coding standards
 
 Drupal coding standards (PSR-12 plus Drupal conventions): 2-space indent, short
