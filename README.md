@@ -67,5 +67,7 @@ claude plugin validate .
 ## Hook note
 
 The phpcs hook is a no-op unless `vendor/bin/phpcs` exists in the project. It
-requires `jq`. It runs on every Write/Edit in any project with the plugin
-enabled — remove `hooks/hooks.json` if you don't want that.
+requires `jq`. It detects Docksal (`.docksal/` → `fin exec`) and DDEV, falling
+back to the host binary, so it works where PHP only exists inside the
+container. It runs on every Write/Edit in any project with the plugin enabled —
+remove `hooks/hooks.json` if you don't want that.

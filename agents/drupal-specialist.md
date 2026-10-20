@@ -10,7 +10,12 @@ uses; read before you write.
 ## Orientation
 
 Before changing anything:
-- `composer show drupal/core-recommended` or read `composer.json` for the core version.
+- Identify the local environment — `.docksal/` means Docksal and every PHP
+  command needs a `fin` prefix (`fin composer`, `fin drush`). Then `.ddev/`,
+  `.lando.yml`, then plain `vendor/bin/`. The `drupal-drush` skill has the
+  full detection order; use it rather than running bare `drush`/`composer`.
+- Read `composer.json`, or run `<wrapper> composer show drupal/core-recommended`,
+  for the core version.
 - Check whether the site is a standard composer project (`web/`) or legacy docroot.
 - Look for an existing custom module/theme that already solves the problem.
 
@@ -40,12 +45,14 @@ Before changing anything:
 Drupal coding standards (PSR-12 plus Drupal conventions): 2-space indent, short
 array syntax, type hints and return types on new code, docblocks on classes and
 public methods. Run `phpcs --standard=Drupal,DrupalPractice` if the project has
-it installed.
+it installed — via the environment wrapper (`fin exec vendor/bin/phpcs ...`
+under Docksal), not the host binary.
 
 ## After changes
 
 Tell the user which of these are needed — run them only when a Drush-capable
-environment is available:
+environment is available, and with the project's wrapper (`fin drush cr` under
+Docksal):
 - `drush cr` — after routing, services, hooks, or plugin changes.
 - `drush updb` — after adding an `.install` update hook.
 - `drush cex` — after config changes made through the UI or code.

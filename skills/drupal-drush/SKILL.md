@@ -9,13 +9,46 @@ description: Run the right Drush command for a Drupal task, and know which cache
 
 Drush is per-project, not global. In order of preference:
 
-1. `ddev drush ...` — if `.ddev/` exists.
-2. `lando drush ...` — if `.lando.yml` exists.
-3. `vendor/bin/drush ...` — plain composer project.
-4. `drush ...` — only if the above are absent and it's on PATH.
+1. `fin drush ...` — if `.docksal/` exists. **Docksal, check this first.**
+2. `ddev drush ...` — if `.ddev/` exists.
+3. `lando drush ...` — if `.lando.yml` exists.
+4. `vendor/bin/drush ...` — plain composer project.
+5. `drush ...` — only if the above are absent and it's on PATH.
 
-Check with `ls .ddev .lando.yml vendor/bin/drush 2>/dev/null` before guessing.
-If none resolve, give the user the command to run rather than inventing one.
+Check with `ls -d .docksal .ddev .lando.yml vendor/bin/drush 2>/dev/null`
+before guessing. If none resolve, give the user the command to run rather than
+inventing one.
+
+## Docksal
+
+Docksal runs everything inside the container, so `fin` prefixes the whole
+command — not just Drush:
+
+```
+fin drush cr
+fin composer require drupal/token
+fin composer install
+fin exec php ...
+```
+
+A bare `composer` or `drush` on the host hits the wrong PHP version, or no PHP
+at all. When `.docksal/` exists, prefix every Drush *and* Composer command with
+`fin`.
+
+Useful Docksal commands:
+
+```
+fin start / fin stop / fin restart
+fin status                  # container state
+fin logs -f
+fin db-import <file.sql>
+fin db-export
+fin bash                    # shell inside the cli container
+```
+
+Projects often define custom commands in `.docksal/commands/` — check there
+(`ls .docksal/commands`) before assuming a task needs raw Drush. `fin init` is
+common and usually rebuilds the whole site.
 
 ## "My change isn't showing up"
 
@@ -71,9 +104,13 @@ Ask before running any of them, and suggest `drush sql:dump` first.
 
 ## Updates
 
+Prefix with the project's wrapper (`fin`, `ddev`, `lando`) — Composer included:
+
 ```
 composer update drupal/core-* --with-all-dependencies
 drush updb -y
 drush cr
 drush cex -y
 ```
+
+Under Docksal that is `fin composer update ...`, `fin drush updb -y`, and so on.
