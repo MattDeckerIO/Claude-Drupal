@@ -1,12 +1,12 @@
 {
-  "name": "drupal-kit",
+  "name": "mattdeckerio-drupal-kit",
   "description": "Drupal tooling for Claude Code.",
   "owner": {
     "name": "Matt Decker"
   },
   "plugins": [
     {
-      "name": "drupal-kit",
+      "name": "mattdeckerio-drupal-kit",
       "source": ".",
       "description": "Drupal 10/11 agents, skills, and commands for Claude Code.",
       "category": "development"
