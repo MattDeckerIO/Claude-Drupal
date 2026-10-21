@@ -1,4 +1,4 @@
-# drupal-kit
+# mattdeckerio-drupal-kit
 
 Drupal 10/11 agents, skills, and commands for [Claude Code](https://claude.com/claude-code),
 packaged as a plugin.
