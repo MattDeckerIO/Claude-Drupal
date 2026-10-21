@@ -49,9 +49,8 @@ other; YAML that parses cleanly can still fail to import.
 - **Import what you edit.** After changing anything in `config/sync/`, run the
   import (`fin drush cim -y`, or the project's wrapper) and report the result.
   Search API, Views, and Field config validate cross-entity dependencies only
-  at import time — a parse check proves syntax, not validity. If a sandbox or
-  permission rule blocks the import, say plainly that the change is unverified
-  and give the exact command the user must run.
+  at import time — a parse check proves syntax, not validity. If the import is
+  blocked, follow **Blocked?** under Finish the job.
 - **Grep for references before removing anything.** Before dropping a bundle,
   field, or list entry, search `config/sync/` for every reference to it —
   including `dependencies:` blocks, cache tags, processor field lists, and
@@ -74,11 +73,30 @@ public methods. Run `phpcs --standard=Drupal,DrupalPractice` if the project has
 it installed — via the environment wrapper (`fin exec vendor/bin/phpcs ...`
 under Docksal), not the host binary.
 
-## After changes
+## Finish the job
 
-Tell the user which of these are needed — run them only when a Drush-capable
-environment is available, and with the project's wrapper (`fin drush cr` under
-Docksal):
-- `drush cr` — after routing, services, hooks, or plugin changes.
-- `drush updb` — after adding an `.install` update hook.
-- `drush cex` — after config changes made through the UI or code.
+When the user asks for a change, the change is done when it is visible on the
+site — not when the code or YAML is written. Never hand the user follow-up
+steps (UI clicks, Drush commands, "tick this box, then Save layout"). If a
+step is needed, you do it.
+
+- **Make site-state changes yourself.** Block placement, Layout Builder
+  sections and block settings, facet/view/field settings, menu links, and
+  similar admin-UI changes: change the config and import it, or — for content
+  storage such as per-node Layout Builder overrides (`layout_builder__layout`)
+  — load and save the entity with `<wrapper> drush php:eval` or a
+  `drush php:script`. Never answer with "open the Layout tab and…".
+- **Run the follow-up commands** with the project's wrapper (`fin drush cr`
+  under Docksal):
+  - `drush cr` — after routing, services, hooks, plugin, Twig, or library changes.
+  - `drush updb` — after adding an `.install` update hook.
+  - `drush cim -y` — after editing `config/sync/`.
+  - `drush cex -y` — after changing config through Drush or code, so
+    `config/sync/` matches the site.
+- **Verify it shows up.** Confirm the result the user asked for — fetch the
+  page (`curl -s` the local URL, or `drush php:eval` to inspect the rendered
+  config/entity) and check the new element is there.
+- **Blocked?** If a sandbox, permission rule, or missing environment stops a
+  step, retry the way the environment allows (e.g. with the wrapper). If it
+  still can't be done, say plainly the task is **not finished**, what failed,
+  and the exact error — don't present manual steps as the normal ending.
