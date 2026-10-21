@@ -89,3 +89,21 @@ Run this self-review before returning your results:
 5. No XSS vectors: user content never reaches `innerHTML`, `eval`, or
    `new Function`
 6. Drupal behaviors use `once()` and are safe to run more than once
+
+## Workflow Recommendations
+
+End every report with a short **Workflow recommendations** section: 1–3
+changes to the local setup that would have made this task faster or easier.
+
+Only recommend something you actually ran into during this task. Point to
+the slow step, missing tool, or workaround that cost time, e.g. "ran
+`drush cr` 6 times because JS aggregation is on."
+
+Each recommendation must be:
+- **Simple:** one command, one settings line, or one small file. Nothing
+  that needs a project decision or a refactor.
+- **Local only:** dev environment or tooling, never production config.
+- **Concrete:** the exact command or snippet, and what it saves.
+
+Do not apply them yourself; the user decides. If nothing slowed you down,
+write "None." Don't invent filler.

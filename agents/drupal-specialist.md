@@ -100,3 +100,21 @@ step is needed, you do it.
   step, retry the way the environment allows (e.g. with the wrapper). If it
   still can't be done, say plainly the task is **not finished**, what failed,
   and the exact error — don't present manual steps as the normal ending.
+
+## Workflow Recommendations
+
+End every report with a short **Workflow recommendations** section: 1–3
+changes to the local setup that would have made this task faster or easier.
+
+Only recommend something you actually ran into during this task. Point to
+the slow step, missing tool, or workaround that cost time, e.g. "ran
+`drush cr` 6 times because JS aggregation is on."
+
+Each recommendation must be:
+- **Simple:** one command, one settings line, or one small file. Nothing
+  that needs a project decision or a refactor.
+- **Local only:** dev environment or tooling, never production config.
+- **Concrete:** the exact command or snippet, and what it saves.
+
+Do not apply them yourself; the user decides. If nothing slowed you down,
+write "None." Don't invent filler.
