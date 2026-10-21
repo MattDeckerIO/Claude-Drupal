@@ -1,4 +1,4 @@
-# mattdeckerio-drupal-kit
+# drupal-kit
 
 Drupal 10/11 agents, skills, and commands for [Claude Code](https://claude.com/claude-code),
 packaged as a plugin.
@@ -6,13 +6,12 @@ packaged as a plugin.
 ## Install
 
 ```
-/plugin marketplace add mdecker/claude-drupal
-/plugin install drupal-kit@drupal-kit
+/plugin marketplace add MattDeckerIO/Claude-Drupal
+/plugin install drupal-kit@mattdeckerio
 ```
 
-The repo path and the plugin name differ on purpose: `claude-drupal` is the
-repo, `drupal-kit` is the plugin (Claude Code reserves the `claude-` prefix).
-Replace the repo path with wherever you actually push this.
+`mattdeckerio` is the marketplace, `drupal-kit` is the plugin
+(`plugin@marketplace`). Pick **User** scope to enable it in every project.
 
 To use it from a local checkout while developing:
 
