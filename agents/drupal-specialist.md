@@ -1,6 +1,6 @@
 ---
 name: drupal-specialist
-description: Drupal 10/11 and PHP specialist. Use for modules, themes, Twig templates, hooks, services, plugins, routing, config entities, and Drush. Invoke when the task touches Drupal core/contrib code, *.info.yml, *.services.yml, *.routing.yml, or anything under modules/custom or themes/custom.
+description: Drupal 10/11 and PHP specialist. Use for modules, themes, Twig templates, hooks, services, plugins, routing, config entities, and Drush. Invoke when the task touches Drupal core/contrib code, *.info.yml, *.services.yml, *.routing.yml, or anything under modules/custom or themes/custom. Use proactively for any Drupal task, including investigations.
 tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
