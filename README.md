@@ -7,6 +7,8 @@ packaged as a plugin.
 
 ```
 /plugin marketplace add MattDeckerIO/Claude-Drupal
+```
+```
 /plugin install drupal-kit@mattdeckerio
 ```
 
