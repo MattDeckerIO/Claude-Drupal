@@ -27,6 +27,7 @@ To use it from a local checkout while developing:
 |---|---|
 | `agents/drupal-specialist.md` | Drupal/PHP subagent — modules, themes, hooks, services, routing |
 | `agents/javascript-specialist.md` | Modern JavaScript subagent — Drupal behaviors, Node scripts, tests |
+| `agents/docksal-specialist.md` | Docksal subagent — fin, .docksal/ config, stacks, custom commands, troubleshooting |
 | `skills/drupal-module-scaffold/` | Scaffolds a custom module with only the files the feature needs |
 | `skills/drupal-drush/` | Picks the right Drush wrapper and the right cache/config command |
 | `skills/drupal-security-update/` | Applies security updates with the smallest version bump, reviews the config diff |

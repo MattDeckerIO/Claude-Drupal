@@ -1,10 +1,10 @@
 {
   "name": "drupal-kit",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Drupal 10/11 agents, skills, and commands for Claude Code.",
   "author": {
     "name": "Matt Decker"
   },
   "license": "MIT",
-  "keywords": ["drupal", "php", "drush", "twig", "cms", "javascript"]
+  "keywords": ["drupal", "php", "drush", "twig", "cms", "javascript", "docksal"]
 }
