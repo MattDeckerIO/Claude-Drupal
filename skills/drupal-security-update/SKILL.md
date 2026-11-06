@@ -5,7 +5,7 @@ description: Apply outstanding Drupal security updates with the smallest version
 
 # Drupal security updates
 
-Six phases, in order. Do not skip phase 1 — a dirty config state makes the
+Seven phases, in order. Do not skip phase 1 — a dirty config state makes the
 post-update export unreadable.
 
 Every `drush` and `composer` call below needs the project's wrapper (`fin`,
@@ -24,25 +24,54 @@ drush cex --diff
   captured. Run `drush cex -y`, review, and commit as its own
   "Capture outstanding config changes" commit **before** touching composer.
 
-Both must be clean. Otherwise phase 4's export mixes somebody's unrelated UI
+Both must be clean. Otherwise phase 5's export mixes somebody's unrelated UI
 tinkering into the security commit and nobody can tell which is which.
 
 ## 2. Find what's vulnerable
 
 ```
-drush pm:security
-drush pm:security --format=json   # when parsing
+composer audit                    # security advisories (Drupal SAs + Packagist)
+composer audit --abandoned=report # abandoned packages
 ```
 
-Exit code 0 and "no outstanding security updates" means stop — report it and
-do nothing else. Non-zero means there is work.
+Exit code 0 means no advisories. Do not stop there — phase 3 still runs.
+Non-zero means there is work.
 
-Also run `drush pm:security-php` for vulnerable non-Drupal composer packages
-if the site has it; same rules apply.
+Record for each package: current version, the version the advisory says
+fixes it.
 
-Record for each package: current version, the version Drush says fixes it.
+## 3. Find unsupported releases
 
-## 3. Update with the smallest bump that works
+`composer audit` does not flag a release that is merely unsupported. Check:
+
+```
+drush php:eval '
+\Drupal::moduleHandler()->loadInclude("update","inc","update.compare");
+$p = update_calculate_project_data(update_get_available(TRUE));
+foreach ($p as $n => $x) if (in_array($x["status"], [2, 3]))  // REVOKED, NOT_SUPPORTED
+  echo "$n {$x["existing_version"]}\n";'
+```
+
+For each hit, read the supported branches from
+`https://updates.drupal.org/release-history/<project>/current` (the
+`<supported_branches>` element).
+
+Rules for each hit:
+
+- A supported branch exists in the same major → use the normal minor bump
+  in phase 4. No permission needed.
+- The only supported branch is a newer major → treat it like any major
+  bump. Stop and report the package, its current version, the target
+  branch, the release notes, and any companion modules that have to move
+  with it (for example `imagemagick` with `image_effects`). Wait for
+  approval.
+- Never treat an alpha, beta or dev branch as the fix unless it's the only
+  supported branch, and say so if it is.
+
+If phases 2 and 3 both come back clean, stop — report it and do nothing
+else.
+
+## 4. Update with the smallest bump that works
 
 Per package, climb only as far as needed. Stop at the first rung that
 resolves:
@@ -58,7 +87,7 @@ usually another package's constraint, not the package itself.
 
 Rules:
 
-- Re-run `drush pm:security` after each rung. If the SA is gone, stop.
+- Re-run `composer audit` after each rung. If the SA is gone, stop.
 - Core is `drupal/core-*`: `composer update "drupal/core-*" -W`.
 - **A major bump needs the user's say-so before it runs.** Majors carry
   breaking API changes, removed hooks, and often a required core version.
@@ -73,7 +102,7 @@ drush updb -y
 drush cr
 ```
 
-## 4. Capture resulting config
+## 5. Capture resulting config
 
 ```
 drush cex -y
@@ -83,7 +112,7 @@ git diff config/
 Module updates add, rename, and remove config keys. This export is what the
 update actually did to the site's config.
 
-## 5. Review the config diff for breaking changes
+## 6. Review the config diff for breaking changes
 
 Read `git diff config/` and flag, specifically:
 
@@ -103,7 +132,7 @@ churn and version bumps, say that plainly rather than manufacturing concerns.
 Also check `drush ws --severity=Error --count=20` after `drush cr` for
 deprecation or missing-plugin errors the config diff won't show.
 
-## 6. Propose commit messages
+## 7. Propose commit messages
 
 Propose, do not commit, unless the user asked you to commit.
 
@@ -131,11 +160,19 @@ fixes SA-CONTRIB-2025-042).
 Config changes: field.storage.node.field_foo picked up a new
 `cardinality_container` key; the rest is default_config_hash churn.
 
+Unsupported releases:
+- drupal/imagemagick 3.x -> 4.x (major, approved; image_effects moved
+  with it)
+
 Breaking changes: none identified. Webform 6.2.9 deprecates
 WebformSubmissionForm::getCustomForm(); no call sites in this codebase.
 ```
 
-Say "Breaking changes: none identified" only after actually doing phase 5.
+Report unsupported releases in their own section, separate from security
+advisories, so they aren't missed when the audit comes back clean. Leave
+the section out only if phase 3 found nothing.
+
+Say "Breaking changes: none identified" only after actually doing phase 6.
 
 ## Never
 
