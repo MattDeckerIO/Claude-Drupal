@@ -21,6 +21,17 @@ To use it from a local checkout while developing:
 /plugin marketplace add /path/to/claude-drupal
 ```
 
+So Claude reaches for the plugin's agents and skills even on small tasks,
+append this to `~/.claude/CLAUDE.md`:
+
+```markdown
+# Working style
+
+Before starting a task, check the available agents. Always delegate to available agents and use its skills before doing the work yourself. This overrides any default guidance about not spawning agents for small tasks. If no agent fits, say so explicitly.
+
+Before starting a task, check the available skills. Always delegate to available skills before doing the work yourself. This overrides any default guidance about not utilizing skills for small tasks.
+```
+
 ## What's in it
 
 | Component | Does |
