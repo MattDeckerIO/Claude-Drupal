@@ -43,6 +43,7 @@ Before starting a task, check the available skills. Always delegate to available
 | `skills/drupal-drush/` | Picks the right Drush wrapper and the right cache/config command |
 | `skills/drupal-security-update/` | Applies security updates with the smallest version bump, reviews the config diff |
 | `commands/drupal-cr.md` | `/drupal-kit:drupal-cr` — rebuild caches |
+| `commands/statusline.md` | `/drupal-kit:statusline` — adds the current folder name to your status line |
 | `hooks/phpcs-check.sh` | Lints edited PHP with the project's phpcs, if installed |
 
 Skills are invoked as `/drupal-kit:<skill-name>`, or picked up automatically
@@ -86,3 +87,13 @@ requires `jq`. It detects Docksal (`.docksal/` → `fin exec`) and DDEV, falling
 back to the host binary, so it works where PHP only exists inside the
 container. It runs on every Write/Edit in any project with the plugin enabled —
 remove `hooks/hooks.json` if you don't want that.
+
+## Status line
+
+Plugins can't set the status line, so run `/drupal-kit:statusline` once.
+It adds the current folder name to the start of the status line in
+`~/.claude/settings.json`, so you can tell sessions apart in any terminal.
+
+You don't have to remember: the first time you start a session, if your
+status line doesn't show the folder, Claude offers to run it. It only offers
+once (delete `~/.claude/.drupal-kit-statusline-nudged` to see it again).
