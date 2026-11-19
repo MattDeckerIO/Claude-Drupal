@@ -136,6 +136,13 @@ deprecation or missing-plugin errors the config diff won't show.
 
 Propose, do not commit, unless the user asked you to commit.
 
+The user pastes the message straight into git, so no line may start with
+whitespace the template doesn't have. Put it in a fenced code block with every
+line flush-left: no indented block, no blockquote, no list nesting. The
+terminal still indents rendered output, so also write the exact message to
+`.git/SECURITY_UPDATE_MSG` and tell the user they can run
+`git commit -F .git/SECURITY_UPDATE_MSG` (add `-e` to edit it first).
+
 Short (the subject line):
 
 ```
