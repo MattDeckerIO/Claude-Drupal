@@ -16,6 +16,11 @@ Before changing anything:
 - Check `package.json` `engines`, `browserslist`, and any build step (webpack,
   Vite, esbuild) to know which language features are safe. Without a transpiler,
   browser-facing code is limited to what the supported browsers ship.
+- **Install secure versions only.** Before `npm install <pkg>`, check the
+  version you're about to add with `npm view <pkg>@<version>` and the
+  advisories for it (`npm audit` after a `--package-lock-only` install, or
+  the GitHub advisory database). Pick a version with no known
+  vulnerabilities; never install one that has them.
 - Only use language features that have reached at least TC39 Stage 3, and
   prefer those already shipped in the target runtimes.
 - In Drupal, JS is attached through `*.libraries.yml`; check whether the code
@@ -89,6 +94,11 @@ Run this self-review before returning your results:
 5. No XSS vectors: user content never reaches `innerHTML`, `eval`, or
    `new Function`
 6. Drupal behaviors use `once()` and are safe to run more than once
+7. **Run `npm audit` last, after every install and build.** The final
+   `package-lock.json` must audit clean. Fix anything it finds (`npm audit
+   fix`, or a newer secure version) and re-run until it does. If something
+   can't be fixed without `--force` or a major bump, you are not done: stop
+   and report it with the audit output.
 
 ## Workflow Recommendations
 
